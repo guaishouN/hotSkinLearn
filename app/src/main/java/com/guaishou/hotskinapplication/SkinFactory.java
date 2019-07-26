@@ -3,6 +3,7 @@ package com.guaishou.hotskinapplication;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -15,7 +16,7 @@ import java.util.List;
 public class SkinFactory implements LayoutInflater.Factory2 {
     //装载需要焕肤的控件
     List<SkinView> viewList = new ArrayList<>();
-    public final static String[] prefixList = {"android.widget","android.view", "android.webkit"};
+    public final static String[] prefixList = {"android.widget.","android.view.", "android.webkit."};
     /**
      * Version of {@link #onCreateView(String, Context, AttributeSet)}
      * that also supplies the parent that the view created view will be
@@ -31,6 +32,7 @@ public class SkinFactory implements LayoutInflater.Factory2 {
      */
     @Override
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+        Log.d("testCreateView","name="+name);
         //监听xml的生成过程 自己去创建这些控件
         View view = null;
         //区分这个控件是否是自定义的控件
@@ -72,12 +74,12 @@ public class SkinFactory implements LayoutInflater.Factory2 {
                 SkinItem skinItem = new SkinItem(attrName,resId,entryName,typeName);
                 itemList.add(skinItem);
             }
-            //如果长度大于零，说明有我们要找的属性
-            if (itemList.size()>0){
-                SkinView skinView = new SkinView(view,itemList);
-                viewList.add(skinView);
-                skinView.apply();
-            }
+        }
+        //如果长度大于零，说明有我们要找的属性
+        if (itemList.size()>0){
+            SkinView skinView = new SkinView(view,itemList);
+            viewList.add(skinView);
+            skinView.apply();
         }
     }
 
@@ -200,7 +202,7 @@ public class SkinFactory implements LayoutInflater.Factory2 {
                             view.setBackgroundDrawable(SkinManager.getInstance().getDrawable(skinItem.getResId()));
                         }
                     }
-                }else if(skinItem.getName().equals("textcolor")){
+                }else if(skinItem.getName().equals("textColor")){
                     if (view instanceof TextView){
                         ((TextView)view).setTextColor(SkinManager.getInstance().getColor(skinItem.getResId()));
                     }else if(view instanceof Button){

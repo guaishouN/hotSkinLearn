@@ -6,9 +6,15 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.widget.Toast;
+
 import java.lang.reflect.Method;
 
+/**
+ * 作用是实现从提供资源的skin.apk中获取资源文件
+ */
 
 public class SkinManager {
     private static SkinManager skinManager = new SkinManager();
@@ -19,8 +25,7 @@ public class SkinManager {
 
     private SkinManager(){
     }
-
-    private void setContext(Context context){
+    public void setContext(Context context){
         this.context = context;
     }
 
@@ -29,12 +34,16 @@ public class SkinManager {
     }
 
     //根据皮肤apk的路径去获取到它的资源对象
-    public void loadSkinApk(String path){
-      //获取包管理器
+    public void loadSkinApk(@NonNull String path){
+        //获取包管理器
         PackageManager packageManager = context.getPackageManager();
         //获取皮肤APK的包信息类
         PackageInfo packageInfo = packageManager.getPackageArchiveInfo(
             path,PackageManager.GET_ACTIVITIES);
+        if(null==packageInfo){
+            Toast.makeText(context,"没有找到皮肤包！\n请把皮肤apk包(skin.apk)放到sdcard根目录下",Toast.LENGTH_SHORT).show();
+            return;
+        }
         //获取到皮肤apk的包名
         skinPackageName = packageInfo.packageName;
         try {
@@ -55,11 +64,13 @@ public class SkinManager {
         if (resources == null){
             return id;
         }
+
         //获取属性值的名字 colorPrimary
         String entryName = context.getResources().getResourceEntryName(id);
         //获取到属性值的类型 color
         String typeName = context.getResources().getResourceTypeName(id);
         //通过名字和类型匹配的资源对象中的ID
+        //获取的是资源id
         int iden = resources.getIdentifier(entryName,typeName,skinPackageName);
         if (iden==0){
             return id;
