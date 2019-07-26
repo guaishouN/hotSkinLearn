@@ -1,17 +1,14 @@
 package com.guaishou.hotskinapplication;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
-
 import java.lang.reflect.Method;
-import java.util.ResourceBundle;
+
 
 public class SkinManager {
     private static SkinManager skinManager = new SkinManager();
@@ -22,9 +19,11 @@ public class SkinManager {
 
     private SkinManager(){
     }
+
     private void setContext(Context context){
         this.context = context;
     }
+
     public static SkinManager getInstance() {
         return skinManager;
     }
